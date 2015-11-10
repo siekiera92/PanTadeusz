@@ -43,6 +43,23 @@
 	<div class="page-header">
 		<h1>Pan Tadeusz <small>Spis ksiÄ…g</small></h1>
 	</div>
+
+ <script>
+$(document).ready(function(){
+    $('.button').click(function(){
+    	var reflectionTitle = document.getElementById("InputTitle").value;
+    	var reflection = document.getElementById("InputReflection").value;
+        var ajaxurl = 'insert.php',
+        data =  {'action': 'insert', 'refleksja' : reflection, 'tytul' : reflectionTitle};
+        $.post(ajaxurl, data, function (response) {
+            // Response div goes here.
+            alert(response);
+        });
+    });
+
+});
+</script>
+
   </head>
   
   <body>
@@ -66,11 +83,48 @@
   <a href="http://v-ie.uek.krakow.pl/~s181616/PanTadeusz/refleksje.html" class="btn btn-primary">Refleksje</a>
 
 </div>
-<div class="col-xs-6"></div>
-</div>
+
+<div class="container">
+            <form class="form-horizontal" role="form" action="" method="post" >
+                <div class="col-lg-6">
+                  <div class="form-group">
+                    <label for="InputTitle">TytuÅ.</label>
+                    <input class="form-control" type="text" id="InputTitle" name="InputTitle">
+                  </div>
+                  <div class="form-group">
+                    <label for="InputReflection">Refleksja</label>
+                      <textarea class="form-control" name="InputReflection" id="InputReflection" rows="5" required></textarea>
+                  </div>
+                  	<input type="submit" class="button btn btn-info" name="insert" value="WyÅ.lij" />
+                </div>
+              </form>
+            </div>
+
+<?php
+$con = pg_connect("host=sbazy user=s181616 dbname=s181616 password=LuLmziBV");
+$s = "select * from refleksje";
+$r = pg_exec($con, $s);
+$lw = pg_numrows($r);
+$lk = pg_numfields($r);
+
+print "<table class='table table-hover'>";
+
+print "<th>Refleksja</th>";
+print "<th>Tytul</th>";
+
+
+for ($j=0; $j<$lw; $j++){
+print "<tr>";
+  for ($i=0; $i<$lk; $i++){
+  print "<td>".pg_result($r, $j, $i);
+  };
+print "</tr>";
+};
+print "</table>";
+?>
 
  
-  <footer class="footer well">
+  <footer class="footer">
       <div class="container">
         <p class="text-muted">Piotr Siekierski</p>
 		<p class="text-muted">KrDzIs3012Si</p>
